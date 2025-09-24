@@ -4,11 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.umc_9th_practice"
+    namespace = "com.example.week2"
     compileSdk = 36
-
+    buildFeatures {
+        viewBinding = true
+    }
     defaultConfig {
-        applicationId = "com.example.umc_9th_practice"
+        applicationId = "com.example.week2"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
@@ -25,9 +27,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    buildFeatures {
-        viewBinding = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
