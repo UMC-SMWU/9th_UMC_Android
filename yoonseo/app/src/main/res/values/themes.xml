@@ -11,6 +11,11 @@
         <item name="windowNoTitle">true</item>
 
         <item name="android:windowTranslucentStatus">true</item>
+        <!-- 상태바/내비바 투명 -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!-- 아이콘 색 제어 -->
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>

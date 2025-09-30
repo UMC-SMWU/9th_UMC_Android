@@ -6,9 +6,12 @@ import LibraryFragment
 import SearchFragment
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.updatePadding
 import com.example.yoonseo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -30,14 +33,22 @@ class MainActivity : AppCompatActivity() {
         // 엣지-투=엣지 킴
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        val controller = WindowInsetsControllerCompat(window, window.decorView)
+        controller.isAppearanceLightStatusBars = false
+        controller.isAppearanceLightNavigationBars = false
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val status = insets.getInsets(WindowInsetsCompat.Type.statusBars())
             val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val nav = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            val frag = supportFragmentManager.findFragmentById(R.id.main_frm)
+            val homeRoot = frag?.view
+            val actions = homeRoot?.findViewById<View>(R.id.home_hero_actions_ll)
+            actions?.updatePadding(top = status.top)
 
             // 루트에 안전패딩을 주면 하위 자식들이 자연스럽게 안전영역 안에 배치됨
-            v.setPadding(v.paddingLeft, sysBars.top, v.paddingRight, sysBars.bottom)
-
-            // 혹은 바텀 내비만 따로 처리하고 싶으면:
-            // binding.mainBnv.updatePadding(bottom = sysBars.bottom)
+            // v.setPadding(v.paddingLeft, sysBars.top, v.paddingRight, sysBars.bottom)
 
             insets
         }

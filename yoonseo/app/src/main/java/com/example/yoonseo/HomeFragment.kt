@@ -53,6 +53,8 @@ class HomeFragment : Fragment() {
             )
         )
         binding.homePlaylistPager.adapter = PlaylistPagerAdapter(playlists)
+        // 캐러셀에 dots 붙이기
+        binding.homePlaylistPagerIndicator.attachTo(binding.homePlaylistPager)
     }
 
 }
