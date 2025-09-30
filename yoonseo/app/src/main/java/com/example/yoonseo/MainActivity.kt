@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // 엣지-투=엣지 킴
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->

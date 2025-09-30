@@ -20,4 +20,12 @@
     <string name="title_browse">둘러보기</string>
     <string name="title_search">검색</string>
     <string name="title_library">보관함</string>
+
+    <!-- main -->
+    <string name="btn_home_mike">마이크 버튼</string>
+    <string name="btn_home_ticket">티켓 버튼</string>
+    <string name="btn_home_setting">설정 버튼"></string>
+    <string name="play_playlist_btn">배너 추천 플레이리스트 재생 버튼</string>
+
+
 </resources>
