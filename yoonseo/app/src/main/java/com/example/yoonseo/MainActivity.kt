@@ -4,6 +4,7 @@ import BrowseFragment
 import HomeFragment
 import LibraryFragment
 import SearchFragment
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -26,7 +27,11 @@ class MainActivity : AppCompatActivity() {
         initBottomNavigation()
 
         binding.mainPlayerCl.setOnClickListener {
-            TODO()
+            val intent = Intent(this, SongActivity::class.java).apply {
+                putExtra("title", binding.mainMiniplayerTitleTv.text.toString())
+                putExtra("singer", binding.mainMiniplayerSingerTv.text.toString())
+                putExtra("albumResId", R.drawable.img_album_exp2)
+            }
             startActivity(intent)
         }
 

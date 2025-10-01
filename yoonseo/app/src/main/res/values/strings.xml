@@ -26,6 +26,8 @@
     <string name="btn_home_ticket">티켓 버튼</string>
     <string name="btn_home_setting">설정 버튼"></string>
     <string name="play_playlist_btn">배너 추천 플레이리스트 재생 버튼</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
