@@ -45,18 +45,19 @@ class AlbumFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        // CollapsingToolbar에 표시될 앨범명
-        binding.collapsingToolbar.title = albumTitle ?: "Fascination"
+        super.onViewCreated(view, savedInstanceState)
 
-        // 툴바 네비게이션 (뒤로가기)
-        binding.albumToolbar.setNavigationIcon(R.drawable.btn_arrow_black)
-        binding.albumToolbar.setNavigationOnClickListener {
+        // CollapsingToolbar에 표시될 앨범명
+        binding.collapsingToolbar.title = albumTitle ?: "Unknown Album"
+
+        // 툴바 내 뒤로가기 버튼 클릭
+        binding.toolbarBackBtn.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
         // ViewPager2 + Tab
-        binding.tracklistViewPager.adapter = AlbumPagerAdaptor(this)
-        TabLayoutMediator(binding.tabLayout, binding.tracklistViewPager) { tab, position ->
+        binding.albumContentViewpager.adapter = AlbumPagerAdaptor(this)
+        TabLayoutMediator(binding.albumTabLayout, binding.albumContentViewpager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
 
@@ -66,9 +67,10 @@ class AlbumFragment : Fragment() {
             val nav = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
 
             // 상단 인셋은 AppBar에만
-            binding.appBar.updatePadding(top = status.top)
+            binding.albumAppBar.updatePadding(top = status.top)
             // 하단 인셋은 스크롤 컨텐츠에만
-            binding.tracklistViewPager.updatePadding(bottom = nav.bottom)
+            binding.albumContentViewpager.updatePadding(bottom = nav.bottom)
+            binding.albumTabLayout.updatePadding(top = 0, bottom = 0)
 
             insets
         }
@@ -81,10 +83,11 @@ class AlbumFragment : Fragment() {
 
     private inner class AlbumPagerAdaptor(fragment: Fragment) : FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int = 2
-        override fun createFragment(position: Int): Fragment {
-            // TODO(): 실제 트랙리스트/상세정보 Fragment 구현
-            return Fragment()
-        }
+        override fun createFragment(position: Int): Fragment =
+            when (position) {
+                0 -> TracklistFragment()
+                else -> Fragment()
+            }
     }
 
     companion object {
