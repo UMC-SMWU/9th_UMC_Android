@@ -7,19 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".AlbumFragment">
 
+    <!-- 상단 툴바 pin 고정 -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/album_appBar"
+        android:id="@+id/album_appbar"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
-        android:fitsSystemWindows="false"
-        android:clipToPadding="false"
         app:liftOnScroll="true">
 
-        <Toolbar
-            android:id="@+id/album_toolbar"
+        <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
-            android:layout_height="70dp">
+            android:layout_height="56dp">
 
             <ImageButton
                 android:id="@+id/toolbar_back_btn"
@@ -31,6 +29,7 @@
                 android:src="@drawable/btn_arrow_black"/>
 
             <TextView
+                android:id="@+id/toolbar_title_placeholder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
@@ -58,21 +57,42 @@
                 android:background="@color/white"
                 android:src="@drawable/ic_my_like_off" />
 
-        </Toolbar>
-        
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsingToolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:titleEnabled="false"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:contentScrim="?attr/colorSurface"
-            app:scrimAnimationDuration="180">
+        </com.google.android.material.appbar.MaterialToolbar>
 
+        <!-- pinned tab: 처음엔 숨김, 스크롤이 앱바 아래에 도착하면 보이게 -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/pinned_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:tabIndicatorFullWidth="false"
+            app:tabIndicatorHeight="2.5dp"
+            app:tabIndicatorColor="#3F3FFD"
+            app:tabSelectedTextColor="@color/black"
+            app:tabRippleColor="@color/transparent"
+            app:tabTextColor="@color/gray_color" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 고정 앨범 헤더 -->
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/album_header"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical">
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp">
 
                 <!--앨범 커버 및 정보-->
                 <TextView
@@ -82,7 +102,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/album_singer"
                     android:textSize="21sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -96,7 +115,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:textSize="17sp"
-                    android:text="singer"/>
+                    android:text="Album Singer"/>
 
                 <TextView
                     android:id="@+id/album_detail"
@@ -117,8 +136,7 @@
                     android:layout_marginTop="20dp"
                     android:background="@drawable/rounded_corner"
                     android:clipToOutline="true"
-                    android:src="@drawable/fascination_moon"
-                    />
+                    android:src="@drawable/fascination_moon" />
 
                 <ImageButton
                     android:layout_width="45dp"
@@ -132,45 +150,47 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/scrolling_tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/rectangle_underline_gray"
+                app:tabIndicatorFullWidth="false"
+                app:tabIndicatorHeight="2.5dp"
+                app:tabIndicatorColor="#3F3FFD"
+                app:tabSelectedTextColor="@color/black"
+                app:tabRippleColor="@color/white"
+                app:tabTextColor="@color/gray_color"
+                app:tabTextAppearance="@style/tabTextStyle">
 
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="수록곡" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="상세정보" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/album_tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_gravity="center"
-        app:tabIndicatorFullWidth="false"
-        app:tabIndicatorHeight="2.5dp"
-        app:tabIndicatorColor="#3F3FFD"
-        app:tabSelectedTextColor="@color/black"
-        app:tabRippleColor="@color/transparent"
-        app:tabTextColor="@color/gray_color"
-        app:tabTextAppearance="@style/tabTextStyle">
+            </com.google.android.material.tabs.TabLayout>
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="수록곡" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/album_content_viewpager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:text="상세정보" />
+        </LinearLayout>
 
-    </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/album_content_viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
