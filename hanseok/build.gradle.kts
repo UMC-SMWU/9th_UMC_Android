@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.week3"
+    namespace = "com.example.week4"
     compileSdk = 36
     buildFeatures {
         viewBinding = true
     }
     defaultConfig {
-        applicationId = "com.example.week3"
+        applicationId = "com.example.week4"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation("com.google.code.gson:gson:2.10.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

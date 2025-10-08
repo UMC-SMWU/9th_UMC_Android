@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FLO">
         <activity
-            android:name=".Week3"
+            android:name=".Week4"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
