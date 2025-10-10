@@ -49,6 +49,11 @@ class HomeFragment : Fragment() {
             override fun onRemoveAlbum(position: Int) {
                 albumRVAdapter.removeItem(position)
             }
+
+            override fun applyItemToSeekBar(album: Album) {
+                (activity as Week4).setPlayerData(album) // 이 부분도 requireActivity()방식으로 작성하면 null안정성이 있다고는 하는데, 정확히 어떻게 안정성이 있는지 궁금해서 질문드립니다!
+                // 어차피 week4의 xml파일에 있는 정보를 수정해야하는데, 반드시 wee4액티비티의 메서드를 다루기 위해 (activity as Week4)이렇게 작성해야하는거 아닌가요? 앱이 강제종료 되기를 막기위해 그렇게 작성하는건가요?
+            }
         })
 
 //        val bundle = Bundle()
@@ -79,13 +84,12 @@ class HomeFragment : Fragment() {
 }
 
 private fun HomeFragment.changeAlbumFragment(album: Album) {
-    (context as Week4).supportFragmentManager.beginTransaction()
+    requireActivity().supportFragmentManager.beginTransaction()
         .replace(R.id.main_frm, AlbumFragment().apply {
             arguments = Bundle().apply {
                 val gson = Gson()
                 val albumJson = gson.toJson(album)
                 putString("album", albumJson)
-
             }
         })
         .commitAllowingStateLoss()
