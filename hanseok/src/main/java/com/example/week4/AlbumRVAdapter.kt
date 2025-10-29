@@ -10,6 +10,8 @@ class AlbumRVAdapter(private var albumList:ArrayList<Album>): RecyclerView.Adapt
     interface MyItemClickListener {
         fun onItemClick(album: Album)
         fun onRemoveAlbum(position: Int)
+
+        fun applyItemToSeekBar(album:Album)
     }
     private lateinit var mItemClickListener: MyItemClickListener
     fun setMyItemClickListener(itemClickListener: MyItemClickListener){
@@ -26,6 +28,9 @@ class AlbumRVAdapter(private var albumList:ArrayList<Album>): RecyclerView.Adapt
         notifyDataSetChanged()
     }
 
+    fun applyItemToSeekBar(album:Album){
+
+    }
     override fun onCreateViewHolder(
         viewGroup: ViewGroup,
         viewType: Int
@@ -37,7 +42,8 @@ class AlbumRVAdapter(private var albumList:ArrayList<Album>): RecyclerView.Adapt
     override fun onBindViewHolder(holder: AlbumRVAdapter.ViewHolder, position: Int) {
         holder.bind(albumList[position])
         holder.itemView.setOnClickListener { mItemClickListener.onItemClick(albumList[position]) }
-//        holder.binding.itemAlbumTitleTv.setOnClickListener { mItemClickListener.onRemoveAlbum(position) }
+        holder.binding.itemAlbumPlayImgIv.setOnClickListener { mItemClickListener.applyItemToSeekBar(albumList[position]) }
+
     }
 
     override fun getItemCount(): Int = albumList.size
