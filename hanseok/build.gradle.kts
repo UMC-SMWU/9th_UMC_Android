@@ -4,13 +4,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.week4"
+    namespace = "com.example.week5"
     compileSdk = 36
     buildFeatures {
         viewBinding = true
     }
     defaultConfig {
-        applicationId = "com.example.week4"
+        applicationId = "com.example.week5"
         minSdk = 33
         targetSdk = 36
         versionCode = 1
