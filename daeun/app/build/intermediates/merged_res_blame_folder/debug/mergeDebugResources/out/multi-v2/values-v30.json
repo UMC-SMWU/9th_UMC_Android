@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.umcworkbook.umc_study.app-mergeDebugResources-51:/values-v30/values-v30.xml",
+            "map": [
+                {
+                    "source": "/Users/li-dianne/.gradle/caches/8.13/transforms/4d9565e6f8ada849eccbeed4c74a4774/transformed/material3-release/res/values-v30/values-v30.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "72",
+                        "endOffsets": "123"
+                    }
+                }
+            ]
+        }
+    ]
+}
