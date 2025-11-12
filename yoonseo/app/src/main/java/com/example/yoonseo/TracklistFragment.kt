@@ -1,12 +1,10 @@
 package com.example.yoonseo
 
-import android.R.attr.track
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.yoonseo.databinding.FragmentTracklistBinding
@@ -24,7 +22,8 @@ class TracklistFragment : Fragment() {
     private var isMixOn = false
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
@@ -37,13 +36,13 @@ class TracklistFragment : Fragment() {
 
         // 더미 트랙
         val tracks = listOf(
-            Track("Solitary Moon", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
-            Track("Dream a Little Dream of Me", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
-            Track("Fascination", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
-            Track("Early Autumn", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
-            Track("Once in a While", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
-            Track("The Very Thought of You", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
-            Track("Water Fog (물안개)", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon)
+            Track(1, "Solitary Moon", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
+            Track(2, "Dream a Little Dream of Me", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
+            Track(3, "Fascination", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
+            Track(4, "Early Autumn", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
+            Track(5, "Once in a While", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
+            Track(6, "The Very Thought of You", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon),
+            Track(7, "Water Fog (물안개)", "Moon (혜원) & Tsuyoshi Yamamoto", R.drawable.fascination_moon)
         )
 
         binding.tracklistRv.apply {
@@ -57,18 +56,21 @@ class TracklistFragment : Fragment() {
         // MIX 토글
         binding.tracklistMixBtn.setOnClickListener {
             isMixOn = !isMixOn
-            updateMixButtonImage()
-            // TODO: MIX 로직 연결
+            if (isMixOn) {
+                // TODO: MIX 정렬/셔플 로직 연결
+            } else {
+                R.drawable.btn_toggle_off
+            }
+            // TODO: MIX 정렬/셔플 로직 연결
         }
-    }
-
-    private fun updateMixButtonImage() {
-        val iconRes = if(isMixOn) R.drawable.btn_toggle_on else R.drawable.btn_toggle_off
-        binding.tracklistMixBtn.findViewById<ImageButton>(R.id.tracklist_mix_btn).setImageResource(iconRes)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        fun newInstance() = TracklistFragment()
     }
 }
