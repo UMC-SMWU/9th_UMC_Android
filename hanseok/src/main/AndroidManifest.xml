@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Week6"
+            android:name=".Week7"
             android:exported="true"
             android:theme="@style/Theme.FLO" />
         <activity
