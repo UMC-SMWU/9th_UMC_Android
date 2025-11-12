@@ -41,24 +41,24 @@ class HomeFragment : Fragment() {
                 title = "달밤의 감성 산책(1)",
                 trackInfo = "총 10곡 2025.03.30",
                 tracks = listOf(
-                    Track( "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
-                    Track( "Butter", "BTS", R.drawable.img_album_exp),
+                    Track( 1, "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
+                    Track( 1, "Butter", "BTS", R.drawable.img_album_exp),
                 )
             ),
             Playlist(
                 title = "달밤의 감성 산책(2)",
                 trackInfo = "총 10곡 2025.03.30",
                 tracks = listOf(
-                    Track( "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
-                    Track( "Butter", "BTS", R.drawable.img_album_exp),
+                    Track( 1, "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
+                    Track( 1, "Butter", "BTS", R.drawable.img_album_exp),
                 )
             ),
             Playlist(
                 title = "달밤의 감성 산책(3)",
                 trackInfo = "총 10곡 2025.03.30",
                 tracks = listOf(
-                    Track( "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
-                    Track( "Butter", "BTS", R.drawable.img_album_exp),
+                    Track( 1, "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
+                    Track( 1, "Butter", "BTS", R.drawable.img_album_exp),
                 )
             )
         )
@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
         val all = ReleaseRepository.loadToday()
 
         val adapter = ReleaseHorizontalAdapter(onClick = { album ->
-            val fragment = AlbumFragment.newInstance(album.title, album.artist, album.coverImg)
+            val fragment = AlbumFragment.newInstance(album.title, album.artist,  album.coverImg)
 
             parentFragmentManager.beginTransaction()
                 .replace(R.id.main_frm, fragment)

@@ -1,16 +1,17 @@
 package com.example.yoonseo.home
 
-data class Track(
-    val title: String,
-    val artist: String,
-    val albumCover: Int // drawable 리소스 ID
-)
-
 data class Album(
     val title: String,
     val artist: String,
     val albumCover: Int,
     val tracks: List<Track>
+)
+
+data class Track(
+    val trackNumber: Int,
+    val title: String,
+    val artist: String,
+    val albumCover: Int
 )
 
 data class Playlist(
