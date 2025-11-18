@@ -1,26 +1,20 @@
-import android.graphics.Rect
+package com.example.yoonseo
+
+import BannerFragment
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
-import androidx.recyclerview.widget.RecyclerView
-import com.example.yoonseo.AlbumFragment
-import com.example.yoonseo.R
+import androidx.viewpager2.widget.ViewPager2
 import com.example.yoonseo.databinding.FragmentHomeBinding
-import com.example.yoonseo.home.Playlist
-import com.example.yoonseo.home.PlaylistPagerAdapter
-import com.example.yoonseo.home.Region
-import com.example.yoonseo.home.ReleaseHorizontalAdapter
-import com.example.yoonseo.home.ReleaseRepository
-import com.example.yoonseo.home.Track
-import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
 
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
+    private var albumDatas = ArrayList<Album>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,102 +23,60 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        setupHeroPlaylists()
-        setupTodayReleases()
+//        binding.homeAlbumImgIv1.setOnClickListener {
+//            (context as MainActivity).supportFragmentManager.beginTransaction()
+//                .replace(R.id.main_frm , AlbumFragment())
+//                .commitAllowingStateLoss()
+//        }
+
+        // 데이터 리스트 생성 더미 데이터
+        albumDatas.apply {
+            add(Album("Butter", "방탄소년단 (BTS)", R.drawable.img_album_exp))
+            add(Album("Lilac", "아이유 (IU)", R.drawable.img_album_exp2))
+            add(Album("Next Level", "에스파 (AESPA)", R.drawable.img_album_exp3))
+            add(Album("Boy with Luv", "방탄소년단 (BTS)", R.drawable.img_album_exp4))
+            add(Album("BBoom BBoom", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5))
+            add(Album("Weekend", "태연 (Tae Yeon)", R.drawable.img_album_exp6))
+        }
+
+        // 더미데이터랑 Adapter 연결
+        val albumRVAdapter = AlbumRVAdapter(albumDatas)
+        // 리사이클러뷰에 어댑터를 연결
+        binding.homeTodayMusicAlbumRv.adapter = albumRVAdapter
+
+        albumRVAdapter.setMyItemClickListener(object : AlbumRVAdapter.MyItemClickListener{
+
+            override fun onItemClick(album: Album) {
+                changeAlbumFragment(album)
+            }
+
+            override fun onRemoveAlbum(position: Int) {
+                albumRVAdapter.removeItem(position)
+            }
+        })
+        // 레이아웃 매니저 설정
+        binding.homeTodayMusicAlbumRv.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+
+        val bannerAdapter = BannerVPAdapter(this)
+        bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp))
+        bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp2))
+        binding.homeBannerVp.adapter = bannerAdapter
+        binding.homeBannerVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
         return binding.root
     }
 
-    private fun setupHeroPlaylists() {
-        val playlists = listOf(
-            Playlist(
-                title = "달밤의 감성 산책(1)",
-                trackInfo = "총 10곡 2025.03.30",
-                tracks = listOf(
-                    Track( 1, "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
-                    Track( 1, "Butter", "BTS", R.drawable.img_album_exp),
-                )
-            ),
-            Playlist(
-                title = "달밤의 감성 산책(2)",
-                trackInfo = "총 10곡 2025.03.30",
-                tracks = listOf(
-                    Track( 1, "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
-                    Track( 1, "Butter", "BTS", R.drawable.img_album_exp),
-                )
-            ),
-            Playlist(
-                title = "달밤의 감성 산책(3)",
-                trackInfo = "총 10곡 2025.03.30",
-                tracks = listOf(
-                    Track( 1, "라일락", "아이유 (IU)", R.drawable.img_album_exp2),
-                    Track( 1, "Butter", "BTS", R.drawable.img_album_exp),
-                )
-            )
-        )
-        binding.homePlaylistPager.adapter = PlaylistPagerAdapter(playlists)
-        // 캐러셀에 dots 붙이기
-        binding.homePlaylistPagerIndicator.attachTo(binding.homePlaylistPager)
-    }
-
-    private fun setupTodayReleases() {
-        val all = ReleaseRepository.loadToday()
-
-        val adapter = ReleaseHorizontalAdapter(onClick = { album ->
-            val fragment = AlbumFragment.newInstance(album.title, album.artist,  album.coverImg)
-
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main_frm, fragment)
-                .addToBackStack(null)
-                .commit()
-        })
-
-        binding.todayReleaseMusicRv.apply {
-            layoutManager = LinearLayoutManager(requireContext(),
-                LinearLayoutManager.HORIZONTAL, false)
-            this.adapter = adapter
-
-            PagerSnapHelper().attachToRecyclerView(this)
-
-            // 앨범 카드 간격
-            addItemDecoration(object : RecyclerView.ItemDecoration() {
-                override fun getItemOffsets(
-                    outRect: Rect,
-                    view: View,
-                    parent: RecyclerView,
-                    state: RecyclerView.State
-                ) {
-                    val pos = parent.getChildAdapterPosition(view)
+    private fun changeAlbumFragment(album: Album) {
+        (context as MainActivity).supportFragmentManager.beginTransaction()
+            .replace(R.id.main_frm, AlbumFragment().apply {
+                arguments = Bundle().apply {
+                    val gson = Gson()
+                    val albumJson = gson.toJson(album)
+                    putString("album", albumJson)
                 }
             })
-        }
-        // tab 구성 (종합, 국내, 해외)
-        val tabs = binding.todayReleaseTabs
-        if (tabs.tabCount == 0) {
-            tabs.addTab(tabs.newTab().setText("종합").setTag(Region.ALL))
-            tabs.addTab(tabs.newTab().setText("국내").setTag(Region.KOREA))
-            tabs.addTab(tabs.newTab().setText("해외").setTag(Region.GLOBAL))
-        }
-        // 필터 적용 함수
-        fun apply(region: Region) {
-            val filtered = when (region) {
-                Region.ALL -> all
-                Region.KOREA -> all.filter { it.region == Region.KOREA }
-                Region.GLOBAL -> all.filter { it.region == Region.GLOBAL }
-            }
-            adapter.submit(filtered)
-        }
-        apply(Region.ALL)
-
-        // tab 선택 리스너
-        tabs.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                val region = tab.tag as? Region ?: Region.ALL
-                apply(region)
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab) {}
-            override fun onTabReselected(tab: TabLayout.Tab) {}
-        })
+            .commitAllowingStateLoss()
     }
 
 }
