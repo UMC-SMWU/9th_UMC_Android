@@ -1,61 +1,42 @@
 package com.example.yoonseo
 
-import BrowseFragment
-import HomeFragment
-import LibraryFragment
-import SearchFragment
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.core.view.updatePadding
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.yoonseo.databinding.ActivityMainBinding
+import com.google.gson.Gson
+import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
 
+    private var song:Song = Song()
+    private var gson: Gson = Gson()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_FLO)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         initBottomNavigation()
+//        val song = Song(binding.mainMiniplayerTitleTv.text.toString(), binding.mainMiniplayerSingerTv.text.toString(),0,60,false)
 
         binding.mainPlayerCl.setOnClickListener {
-            val intent = Intent(this, SongActivity::class.java).apply {
-                putExtra("title", binding.mainMiniplayerTitleTv.text.toString())
-                putExtra("singer", binding.mainMiniplayerSingerTv.text.toString())
-                putExtra("albumResId", R.drawable.img_album_exp2)
-            }
+            val intent = Intent(this, SongActivity::class.java)
+            intent.putExtra("title", song.title)
+            intent.putExtra("singer",song.singer)
+            intent.putExtra("second",song.second)
+            intent.putExtra("playTime",song.playTime)
+            intent.putExtra("isPlaying",song.isPlaying)
+            intent.putExtra("music", song.music)
             startActivity(intent)
-        }
-
-        // 엣지-투=엣지 킴
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        val controller = WindowInsetsControllerCompat(window, window.decorView)
-        controller.isAppearanceLightStatusBars = false
-        controller.isAppearanceLightNavigationBars = false
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
-            val status = insets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            val nav = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-
-            val frag = supportFragmentManager.findFragmentById(R.id.main_frm)
-            val homeRoot = frag?.view
-            val actions = homeRoot?.findViewById<View>(R.id.home_hero_actions_ll)
-            actions?.updatePadding(top = status.top)
-
-            // 루트에 안전패딩을 주면 하위 자식들이 자연스럽게 안전영역 안에 배치됨
-            // v.setPadding(v.paddingLeft, sysBars.top, v.paddingRight, sysBars.bottom)
-
-            insets
         }
 
     }
@@ -76,9 +57,9 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
 
-                R.id.browseFragment -> {
+                R.id.lookFragment -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, BrowseFragment())
+                        .replace(R.id.main_frm, LookFragment())
                         .commitAllowingStateLoss()
                     return@setOnItemSelectedListener true
                 }
@@ -88,14 +69,34 @@ class MainActivity : AppCompatActivity() {
                         .commitAllowingStateLoss()
                     return@setOnItemSelectedListener true
                 }
-                R.id.libraryFragment -> {
+                R.id.lockerFragment -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_frm, LibraryFragment())
+                        .replace(R.id.main_frm, LockerFragment())
                         .commitAllowingStateLoss()
                     return@setOnItemSelectedListener true
                 }
             }
             false
         }
+    }
+
+    private fun setMiniPlayer(song : Song){
+        binding.mainMiniplayerTitleTv.text = song.title
+        binding.mainMiniplayerSingerTv.text = song.singer
+        binding.mainMiniplayerProgressSb.progress = (song.second*100000)/song.playTime
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+        val songJson = sharedPreferences.getString("songData", null)
+
+        song = if(songJson == null){
+            Song("라일락", "아이유(IU)", 0,60, false, "music_lilac")
+        } else {
+            gson.fromJson(songJson, Song::class.java)
+        }
+
+        setMiniPlayer(song)
     }
 }
