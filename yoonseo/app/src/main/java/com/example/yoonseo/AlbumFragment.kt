@@ -1,6 +1,5 @@
 package com.example.yoonseo
 
-import android.R.attr.bottom
 import android.graphics.Rect
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.yoonseo.databinding.FragmentAlbumBinding
-import com.example.yoonseo.databinding.FragmentSearchBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

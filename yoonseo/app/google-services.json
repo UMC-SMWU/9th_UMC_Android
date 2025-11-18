@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "34009229168",
+    "project_id": "floclone-8fdca",
+    "storage_bucket": "floclone-8fdca.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34009229168:android:61e036de4651b7f90811b5",
+        "android_client_info": {
+          "package_name": "com.example.yoonseo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxtf_3aN19xLHGrnvoSgCw-3pxeKNmts0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

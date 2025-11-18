@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.example.flo.databinding.ActivityMainBinding
 import com.google.gson.Gson
+import missing.namespace.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
