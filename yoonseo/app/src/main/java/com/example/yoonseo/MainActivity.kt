@@ -2,19 +2,27 @@ package com.example.yoonseo
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.yoonseo.databinding.ActivityMainBinding
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
+    private lateinit var songDB: SongDatabase
 
     private var song:Song = Song()
     private var gson: Gson = Gson()
@@ -25,20 +33,46 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        songDB = SongDatabase.getInstance(this)!!
+
+        // DB 초기화
+        inputDummySongs()
+        // inset 설정
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // 하단 메뉴바
         initBottomNavigation()
-//        val song = Song(binding.mainMiniplayerTitleTv.text.toString(), binding.mainMiniplayerSingerTv.text.toString(),0,60,false)
 
         binding.mainPlayerCl.setOnClickListener {
-            val intent = Intent(this, SongActivity::class.java)
-            intent.putExtra("title", song.title)
-            intent.putExtra("singer",song.singer)
-            intent.putExtra("second",song.second)
-            intent.putExtra("playTime",song.playTime)
-            intent.putExtra("isPlaying",song.isPlaying)
-            intent.putExtra("music", song.music)
+            val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
+            editor.putInt("songId",song.id)
+            editor.apply()
+
+            val intent = Intent(this,SongActivity::class.java)
             startActivity(intent)
         }
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        // Coroutine 으로 DB 접근
+        lifecycleScope.launch {
+            val spf = getSharedPreferences("song", MODE_PRIVATE)
+            val songId = spf.getInt("songId",0)
+
+            // ID 스레드에서 DB 작업
+            song = withContext(Dispatchers.IO){
+                if (songId == 0){
+                    songDB.songDao().getSong(1)
+                } else {
+                    songDB.songDao().getSong(songId)
+                }
+            }
+            // 메인 스레드에서 UI 업데이트
+            Log.d("song ID", song.id.toString())
+            setMiniPlayer(song)
+        }
     }
 
     private fun initBottomNavigation(){
@@ -86,17 +120,96 @@ class MainActivity : AppCompatActivity() {
         binding.mainMiniplayerProgressSb.progress = (song.second*100000)/song.playTime
     }
 
-    override fun onStart() {
-        super.onStart()
-        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-        val songJson = sharedPreferences.getString("songData", null)
+    private fun inputDummySongs(){
+        val songs = songDB.songDao().getSongs()
 
-        song = if(songJson == null){
-            Song("라일락", "아이유(IU)", 0,60, false, "music_lilac")
-        } else {
-            gson.fromJson(songJson, Song::class.java)
+        if (songs.isNotEmpty()) {
+            Log.d("DB data", "Songs already exist: ${songs.size}")
+            return
         }
 
-        setMiniPlayer(song)
+        // Data가 없을 때만 삽입
+        songDB.songDao().insert(
+            Song(
+                "Lilac",
+                "아이유 (IU)",
+                0,
+                200,
+                false,
+                "music_lilac",
+                R.drawable.img_album_exp2,
+                false,
+            )
+        )
+
+        songDB.songDao().insert(
+            Song(
+                "Flu",
+                "아이유 (IU)",
+                0,
+                200,
+                false,
+                "music_flu",
+                R.drawable.img_album_exp2,
+                false,
+            )
+        )
+
+        songDB.songDao().insert(
+            Song(
+                "Butter",
+                "방탄소년단 (BTS)",
+                0,
+                190,
+                false,
+                "music_butter",
+                R.drawable.img_album_exp,
+                false,
+            )
+        )
+
+        songDB.songDao().insert(
+            Song(
+                "Next Level",
+                "에스파 (AESPA)",
+                0,
+                210,
+                false,
+                "music_next",
+                R.drawable.img_album_exp3,
+                false,
+            )
+        )
+
+
+        songDB.songDao().insert(
+            Song(
+                "Boy with Luv",
+                "방탄소년단 (BTS)",
+                0,
+                230,
+                false,
+                "music_boy",
+                R.drawable.img_album_exp4,
+                false,
+            )
+        )
+
+
+        songDB.songDao().insert(
+            Song(
+                "BBoom BBoom",
+                "모모랜드 (MOMOLAND)",
+                0,
+                240,
+                false,
+                "music_bboom",
+                R.drawable.img_album_exp5,
+                false,
+            )
+        )
+
+        val _songs = songDB.songDao().getSongs()
+        Log.d("DB data", _songs.toString())
     }
 }
