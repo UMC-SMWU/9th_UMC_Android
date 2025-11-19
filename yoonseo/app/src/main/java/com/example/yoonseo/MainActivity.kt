@@ -6,17 +6,23 @@ import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.yoonseo.databinding.ActivityMainBinding
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.jvm.java
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var binding: ActivityMainBinding
+    private lateinit var songDB: SongDatabase
 
     private var song:Song = Song()
     private var gson: Gson = Gson()
@@ -26,11 +32,15 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.Theme_FLO)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
 
+        songDB = SongDatabase.getInstance(this)!!
+
+        // DB 초기화
         inputDummySongs()
+        // inset 설정
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // 하단 메뉴바
         initBottomNavigation()
-//        val song = Song(binding.mainMiniplayerTitleTv.text.toString(), binding.mainMiniplayerSingerTv.text.toString(),0,60,false)
 
         binding.mainPlayerCl.setOnClickListener {
             val editor = getSharedPreferences("song", MODE_PRIVATE).edit()
@@ -45,27 +55,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-//        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-//        val songJson = sharedPreferences.getString("songData", null)
-//
-//        song = if(songJson == null){
-//            Song("라일락", "아이유(IU)", 0,60, false, "music_lilac")
-//        } else {
-//            gson.fromJson(songJson, Song::class.java)
-//        }
-        val spf = getSharedPreferences("song", MODE_PRIVATE)
-        val songId = spf.getInt("songId",0)
 
-        val songDB = SongDatabase.getInstance(this)!!
+        // Coroutine 으로 DB 접근
+        lifecycleScope.launch {
+            val spf = getSharedPreferences("song", MODE_PRIVATE)
+            val songId = spf.getInt("songId",0)
 
-        song = if (songId == 0){
-            songDB.songDao().getSong(1)
-        } else{
-            songDB.songDao().getSong(songId)
+            // ID 스레드에서 DB 작업
+            song = withContext(Dispatchers.IO){
+                if (songId == 0){
+                    songDB.songDao().getSong(1)
+                } else {
+                    songDB.songDao().getSong(songId)
+                }
+            }
+            // 메인 스레드에서 UI 업데이트
+            Log.d("song ID", song.id.toString())
+            setMiniPlayer(song)
         }
-
-        Log.d("song ID", song.id.toString())
-        setMiniPlayer(song)
     }
 
     private fun initBottomNavigation(){
@@ -114,11 +121,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun inputDummySongs(){
-        val songDB = SongDatabase.getInstance(this)!!
         val songs = songDB.songDao().getSongs()
 
-        if (songs.isNotEmpty()) return
+        if (songs.isNotEmpty()) {
+            Log.d("DB data", "Songs already exist: ${songs.size}")
+            return
+        }
 
+        // Data가 없을 때만 삽입
         songDB.songDao().insert(
             Song(
                 "Lilac",
@@ -179,7 +189,7 @@ class MainActivity : AppCompatActivity() {
                 0,
                 230,
                 false,
-                "music_lilac",
+                "music_boy",
                 R.drawable.img_album_exp4,
                 false,
             )

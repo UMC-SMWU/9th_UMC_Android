@@ -13,6 +13,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.yoonseo.databinding.ActivitySongBinding
 import com.google.gson.Gson
+import java.util.Timer
 
 class SongActivity : AppCompatActivity() {
 
@@ -149,15 +150,32 @@ class SongActivity : AppCompatActivity() {
 
 
     private fun setPlayer(song: Song){
+        // coverImg가 0이거나 유효하지 않으면 기본 이미지 사용
+        val imageResId = if (song.coverImg != 0) {
+            song.coverImg
+        } else {
+            R.drawable.img_album_exp  // 기본 이미지
+        }
+
+        binding.songAlbumIv.setImageResource(imageResId)
         binding.songMusicTitleTv.text = song.title
         binding.songSingerNameTv.text = song.singer
-        binding.songStartTimeTv.text = String.format("%02d:%02d",song.second / 60, song.second % 60)
-        binding.songEndTimeTv.text = String.format("%02d:%02d",song.playTime / 60, song.playTime % 60)
-        binding.songAlbumIv.setImageResource(song.coverImg!!)
-        binding.songProgressSb.progress = (song.second * 1000 / song.playTime)
 
-        val music = resources.getIdentifier(song.music, "raw", this.packageName)
-        mediaPlayer = MediaPlayer.create(this, music)
+        // music 리소스 ID 가져오기
+        val musicResId = resources.getIdentifier(song.music, "raw", this.packageName)
+        if (musicResId != 0) {
+            mediaPlayer = MediaPlayer.create(this, musicResId)
+
+            // SeekBar 설정
+            binding.songProgressSb.max = song.playTime * 1000
+            binding.songProgressSb.progress = song.second * 1000
+            // 총 재생시간 표시
+            val totalTime = String.format("%02d:%02d", song.playTime / 60, song.playTime % 60)
+            binding.songEndTimeTv.text = totalTime
+            setPlayerStatus(song.isPlaying)
+        } else {
+            Log.e("SongActivity", "Music resource not found: ${song.music}")
+        }
 
         if (song.isLike){
             binding.songLikeIv.setImageResource(R.drawable.ic_my_like_on)
@@ -189,7 +207,7 @@ class SongActivity : AppCompatActivity() {
     }
 
     private fun startTimer(){
-        timer = Timer(songs[nowPos].playTime,songs[nowPos].isPlaying)
+        timer = Timer(songs[nowPos].playTime, songs[nowPos].isPlaying)
         timer.start()
     }
 
