@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/white"/>
+    <item android:drawable="@drawable/ic_flo_logo"
+        android:width="75dp"
+        android:height="31.78dp"
+        android:gravity="center" />
+</layer-list>

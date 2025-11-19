@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">week9_10</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_activity_com.kakao.sdk.auth._auth_code_handler">
+        com.kakao.sdk.auth.AuthCodeHandlerActivity
+    </string>
+    <string name="title_activity_auth_code_handler">AuthCodeHandlerActivity</string>
+</resources>
