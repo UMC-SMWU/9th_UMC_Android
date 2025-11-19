@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yoonseo.databinding.FragmentHomeBinding
 import com.google.gson.Gson
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class HomeFragment : Fragment() {
 
@@ -63,6 +65,28 @@ class HomeFragment : Fragment() {
         bannerAdapter.addFragment(BannerFragment(R.drawable.img_home_viewpager_exp2))
         binding.homeBannerVp.adapter = bannerAdapter
         binding.homeBannerVp.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+        // 루트 ScrollView의 원래 padding 기억
+        val initialPaddingTop = binding.root.paddingTop
+        val initialPaddingLeft = binding.root.paddingLeft
+        val initialPaddingRight = binding.root.paddingRight
+        val initialPaddingBottom = binding.root.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            // status bar 높이만큼 paddingTop 추가
+            v.setPadding(
+                initialPaddingLeft + systemBars.left,
+                initialPaddingTop + systemBars.top,
+                initialPaddingRight + systemBars.right,
+                initialPaddingBottom + systemBars.bottom
+            )
+
+            insets
+        }
+
+        ViewCompat.requestApplyInsets(binding.root)
 
         return binding.root
     }
