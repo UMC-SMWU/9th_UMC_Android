@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         // DB 초기화
         inputDummySongs()
         // inset 설정
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // WindowCompat.setDecorFitsSystemWindows(window, false)
         // 하단 메뉴바
         initBottomNavigation()
 

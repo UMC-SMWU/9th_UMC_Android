@@ -138,7 +138,7 @@
     <View
         android:id="@+id/sign_up_password_underscore_view"
         android:layout_width="0dp"
-        android:layout_height="1px"
+        android:layout_height="2px"
         android:layout_marginTop="15dp"
         android:background="#a8a8a8"
         app:layout_constraintEnd_toEndOf="@+id/sign_up_password_et"
