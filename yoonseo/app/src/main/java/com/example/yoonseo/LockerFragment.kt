@@ -39,11 +39,7 @@ class LockerFragment : Fragment() {
             startActivity(intent)
         }
 
-        val songDB = SongDatabase.getInstance(requireContext())!!
-        val userId = getUserId()
-        val likedAlbums = songDB.albumDao().getLikedAlbums()
-
-        Log.d("LOKERFRAG/GET_ALBUMS", likedAlbums.toString())
+        updateLoginStatus()
 
         return binding.root
     }
@@ -54,11 +50,11 @@ class LockerFragment : Fragment() {
     }
 
     private fun initViews() {
-        val jwt: Int = getUserId()
-        if (jwt == 0) {
-
+        val userId: Int = getUserId()
+        if (userId == 0) {
+            Log.d("LockerFragment", "로그인 필요")
         } else {
-
+            Log.d("LockerFragment", "로그인됨: userId=$userId")
         }
     }
 
@@ -70,15 +66,22 @@ class LockerFragment : Fragment() {
     private fun updateLoginStatus() {
         val sharedPreferences = requireActivity().getSharedPreferences("auth", Context.MODE_PRIVATE)
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+
         if(isLoggedIn) {
+            // 로그인 된 상태
             val userEmail = sharedPreferences.getString("userEmail", "")
             binding.lockerLoginTv.text = userEmail?.substringBefore("@") ?: "사용자"
-            // 로그인된 상태에서 클릭 시 로그아웃
+            // 로그인 된 상태에서 클릭 시 로그아웃
             binding.lockerLoginTv.setOnClickListener {
                 logout()
             }
         } else {
+            // 로그인 안된 상태
             binding.lockerLoginTv.text = "로그인"
+            binding.lockerLoginTv.setOnClickListener {
+                val intent = Intent(activity, LoginActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 

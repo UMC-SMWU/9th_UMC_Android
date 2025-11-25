@@ -41,7 +41,7 @@ class SavedAlbumFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        initRecyclerview()
+        loadLikedAlbums()
     }
 
     private fun initRecyclerview(){
@@ -49,6 +49,7 @@ class SavedAlbumFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
 
         albumRVAdapter = SavedAlbumRVAdapter()
+        // 삭제 클릭 리스너
         albumRVAdapter.setMyItemClickListener(object : SavedAlbumRVAdapter.MyItemClickListener{
             override fun onRemoveAlbum(albumId: Int) {
                 removeAlbum(albumId)
@@ -78,6 +79,9 @@ class SavedAlbumFragment : Fragment() {
 
     private fun removeAlbum(albumId: Int) {
         val userId = getUserId()
+        if(userId == 0) {
+            Toast.makeText(requireContext(), "로그인이 필요합니다.", Toast.LENGTH_SHORT).show()
+        }
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 songDB.albumDao().updateIsLikeById(false, albumId)

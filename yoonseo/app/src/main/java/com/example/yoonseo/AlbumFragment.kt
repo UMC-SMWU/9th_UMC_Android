@@ -40,13 +40,17 @@ class AlbumFragment : Fragment() {
         currentAlbum = gson.fromJson(albumData, Album::class.java)
 
         currentAlbum?.let { album ->
-            // DB에서 최신 상태 확인
-            lifecycleScope.launch {
-                val dbAlbum = withContext(Dispatchers.IO) {
-                    songDB.albumDao().getAlbum(album.id)
-                }
-                isLiked = dbAlbum?.isLike ?: false
+            val userId = getUserId()
 
+            lifecycleScope.launch {
+                isLiked =  withContext(Dispatchers.IO) {
+                    if (userId == 0) {
+                        false
+                    } else {
+                        val likeId = songDB.albumDao().isLikedAlbum(userId, album.id)
+                        likeId != null
+                    }
+                }
                 withContext(Dispatchers.Main) {
                     setViews(album)
                     initViewPager()
