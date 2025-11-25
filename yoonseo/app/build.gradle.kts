@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    //어노테이션(@) 활성화
     id("kotlin-kapt")
+    // id("com.google.gms.google-services")
 }
 
 android {
@@ -62,12 +62,14 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation("com.tbuonomo:dotsindicator:4.3")
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // Test
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    // Gson
     implementation("com.google.code.gson:gson:2.8.7")
     // RoomDB 라이브러리
     val roomVersion = "2.6.1"
@@ -77,4 +79,8 @@ dependencies {
     // Coroutines 라이브러리
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+    // Firebase
+//    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+//    implementation("com.google.firebase:firebase-auth-ktx")
+//    implementation("com.google.firebase:firebase-analytics-ktx")
 }

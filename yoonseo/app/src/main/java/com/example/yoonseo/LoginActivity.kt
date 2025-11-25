@@ -11,6 +11,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var userDB: UserDatabase
+    // private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +19,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         userDB = UserDatabase.getInstance(this)!!
+        // Firebase Auth 초기화
+        // auth = Firebase.auth
 
         // 닫기 버튼
         binding.loginCloseIv.setOnClickListener {
@@ -32,11 +35,14 @@ class LoginActivity : AppCompatActivity() {
 
         // 로그인 버튼
         binding.loginBtn.setOnClickListener {
-            // TODO: 로그인 로직 구현
             login()
         }
 
         // 비밀번호 보이기/숨기기
+        setupPasswordVisibility()
+    }
+
+    private fun setupPasswordVisibility() {
         var isPasswordVisible = false
         binding.loginHidePasswordIv.setOnClickListener {
             isPasswordVisible = !isPasswordVisible
@@ -83,6 +89,7 @@ class LoginActivity : AppCompatActivity() {
             editor.putInt("userId", user.id)
             editor.putString("userEmail", user.email)
             editor.putBoolean("isLoggedIn", true)
+            // 비동기 저장
             editor.apply()
 
             Toast.makeText(this, "로그인 되었습니다", Toast.LENGTH_SHORT).show()
