@@ -346,6 +346,9 @@ class Week9 : AppCompatActivity() {
 
     override fun onStart(){
         super.onStart()
+
+        val keyHash = com.kakao.sdk.common.util.Utility.getKeyHash(this)
+        Log.d("KeyHash", keyHash)
         val spf = getSharedPreferences("song", MODE_PRIVATE)
         val songId = spf.getString("songId", "")
 

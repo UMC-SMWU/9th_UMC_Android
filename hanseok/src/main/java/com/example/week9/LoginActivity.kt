@@ -1,15 +1,21 @@
 package com.example.week9
 
 import UserRepository
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import com.example.week9.SignUpActivity
 import com.example.week9.User
 import com.example.week9.databinding.ActivityLoginBinding
 import com.example.week9.Week9
+import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.AuthErrorCause
+
+import com.kakao.sdk.user.UserApiClient
 
 class LoginActivity : AppCompatActivity(), LoginView, TestView {
 
@@ -33,7 +39,74 @@ class LoginActivity : AppCompatActivity(), LoginView, TestView {
         binding.tokenTestBtn.setOnClickListener {
             testToken()
         }
+        binding.loginKakakoLoginIv.setOnClickListener {
+            kakaoLogin()
+        }
+        binding.loginKakakoLogoutIv.setOnClickListener {
+            kakaoLogout()
+        }
     }
+    private fun kakaoLogout() {
+        // 로그아웃버튼 직접구현
+        UserApiClient.instance.logout { error ->
+            if (error != null) {
+                Log.e("KakaoLogout", "로그아웃 실패", error)
+                Toast.makeText(this, "로그아웃 실패", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.i("KakaoLogout", "로그아웃 성공")
+                UserApiClient.instance.me { user, error ->
+                    if (error != null) {
+                        // 로그아웃하면 사용자 정보가 없기 때문에 요청 실패가 나오게됨
+                        Log.e("TAG", "사용자 정보 요청 실패", error)
+                    } else if (user != null) {
+                        Log.i("TAG", "=== 카카오 사용자 정보 ===")
+                        Log.i("TAG", "ID: ${user.id}")
+                        Log.i("TAG", "nickname: ${user.kakaoAccount?.profile?.nickname}")
+                        Log.i("TAG", "profileImage: ${user.kakaoAccount?.profile?.profileImageUrl}")
+                        Log.i("TAG", "======================")
+                        Toast.makeText(this, "로그아웃 성공!", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+    private fun kakaoLogin() {
+        UserApiClient.instance.logout { _ ->
+            val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+                if (error != null) {
+                    Toast.makeText(this, "로그인 실패: ${error.message}", Toast.LENGTH_SHORT).show()
+                } else if (token != null) {
+                    Log.d("KakaoLogin", "카카오 로그인 성공: ${token.accessToken}")
+
+                    UserApiClient.instance.me { user, error ->
+                        if (error != null) {
+                            Log.e("TAG", "사용자 정보 요청 실패", error)
+                        } else if (user != null) {
+                            Log.i("TAG", "=== 카카오 사용자 정보 ===")
+                            Log.i("TAG", "ID: ${user.id}")
+                            Log.i("TAG", "nickname: ${user.kakaoAccount?.profile?.nickname}")
+                            Log.i("TAG", "profileImage: ${user.kakaoAccount?.profile?.profileImageUrl}")
+                            Log.i("TAG", "======================")
+
+
+                            Toast.makeText(this, "카카오 로그인 완료!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, Week9::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }
+                    }
+                }
+            }
+
+            if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
+                UserApiClient.instance.loginWithKakaoTalk(this, callback = callback)
+            } else {
+                UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+            }
+        }
+    }
+
     private fun testToken() {
         val spf = getSharedPreferences("auth", MODE_PRIVATE)
         val accessToken = spf.getString("accessToken", null)

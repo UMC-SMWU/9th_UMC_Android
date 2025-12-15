@@ -1,41 +1,22 @@
 {
   "project_info": {
-    "project_number": "1033422728904",
-    "firebase_url": "https://umc-9th-practice-default-rtdb.firebaseio.com",
-    "project_id": "umc-9th-practice",
-    "storage_bucket": "umc-9th-practice.firebasestorage.app"
+    "project_number": "396362906978",
+    "firebase_url": "https://week9-91fad-default-rtdb.firebaseio.com",
+    "project_id": "week9-91fad",
+    "storage_bucket": "week9-91fad.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1033422728904:android:8d2e12209a6e2a4abc7ffd",
+        "mobilesdk_app_id": "1:396362906978:android:998a16d6abda9ae30c003b",
         "android_client_info": {
-          "package_name": "com.example.week7"
+          "package_name": "com.example.week9"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCTkLNPlxS2fjlCAt31ewWyw6RawB6MfFw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1033422728904:android:f22f212f20fde18ebc7ffd",
-        "android_client_info": {
-          "package_name": "com.example.week8"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCTkLNPlxS2fjlCAt31ewWyw6RawB6MfFw"
+          "current_key": "AIzaSyDy56f1obSdvcU6BIqmtxrs_N4m3sT7HCs"
         }
       ],
       "services": {
