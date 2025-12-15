@@ -281,23 +281,4 @@
             android:src="@drawable/apple_44" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/token_test_btn"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:text="토큰 테스트버튼"
-        app:layout_constraintTop_toBottomOf="@id/login_social_login_layout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp" />
-    <TextView
-        android:id="@+id/token_test_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="여기에 표시함"
-        app:layout_constraintTop_toBottomOf="@id/token_test_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
