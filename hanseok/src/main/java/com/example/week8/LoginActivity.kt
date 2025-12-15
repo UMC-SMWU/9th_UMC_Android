@@ -40,7 +40,6 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // ▼▼▼ 3. 아이디와 도메인을 '@'로 합쳐서 완전한 이메일 주소를 생성합니다. ▼▼▼
         val email = "$emailId@$emailDomain"
 
         userRepository.login(email, password) { isSuccess, message, user ->
