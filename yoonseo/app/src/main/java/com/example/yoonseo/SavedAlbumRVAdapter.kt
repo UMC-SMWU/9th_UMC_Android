@@ -20,13 +20,17 @@ class SavedAlbumRVAdapter (): RecyclerView.Adapter<SavedAlbumRVAdapter.ViewHolde
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): SavedAlbumRVAdapter.ViewHolder {
-        val binding: ItemLockerAlbumBinding = ItemLockerAlbumBinding.inflate(LayoutInflater.from(viewGroup.context), viewGroup, false)
-
+        val binding: ItemLockerAlbumBinding = ItemLockerAlbumBinding.inflate(
+            LayoutInflater.from(viewGroup.context),
+            viewGroup,
+            false
+        )
         return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: SavedAlbumRVAdapter.ViewHolder, position: Int) {
         holder.bind(albums[position])
+        // 삭제 버튼 클릭
         holder.binding.itemAlbumMoreIv.setOnClickListener {
             mItemClickListener.onRemoveAlbum(albums[position].id)
             removeSong(position)
@@ -43,6 +47,7 @@ class SavedAlbumRVAdapter (): RecyclerView.Adapter<SavedAlbumRVAdapter.ViewHolde
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun removeSong(position: Int){
         albums.removeAt(position)
         notifyDataSetChanged()

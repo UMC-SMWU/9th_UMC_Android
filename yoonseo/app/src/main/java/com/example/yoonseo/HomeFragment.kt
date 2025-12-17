@@ -2,21 +2,28 @@ package com.example.yoonseo
 
 import BannerFragment
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.input.key.Key.Companion.D
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.example.yoonseo.databinding.FragmentHomeBinding
 import com.google.gson.Gson
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
     private var albumDatas = ArrayList<Album>()
+    private lateinit var songDB: SongDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,28 +32,26 @@ class HomeFragment : Fragment() {
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-//        binding.homeAlbumImgIv1.setOnClickListener {
-//            (context as MainActivity).supportFragmentManager.beginTransaction()
-//                .replace(R.id.main_frm , AlbumFragment())
-//                .commitAllowingStateLoss()
-//        }
+        // DB 초기화
+        songDB = SongDatabase.getInstance(requireContext())!!
+        // 앨범 데이터 초기화
+        initAlbumData()
 
         // 데이터 리스트 생성 더미 데이터
-        albumDatas.apply {
-            add(Album(1, "Butter", "방탄소년단 (BTS)", R.drawable.img_album_exp, false))
-            add(Album(2, "Lilac", "아이유 (IU)", R.drawable.img_album_exp2, false))
-            add(Album(3, "Next Level", "에스파 (AESPA)", R.drawable.img_album_exp3, false))
-            add(Album(4, "Boy with Luv", "방탄소년단 (BTS)", R.drawable.img_album_exp4, false))
-            add(Album(5, "BBoom BBoom", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, false))
-            add(Album(6, "Weekend", "태연 (Tae Yeon)", R.drawable.img_album_exp6, false))
-        }
+//        albumDatas.apply {
+//            add(Album(1, "Butter", "방탄소년단 (BTS)", R.drawable.img_album_exp, false))
+//            add(Album(2, "Lilac", "아이유 (IU)", R.drawable.img_album_exp2, false))
+//            add(Album(3, "Next Level", "에스파 (AESPA)", R.drawable.img_album_exp3, false))
+//            add(Album(4, "Boy with Luv", "방탄소년단 (BTS)", R.drawable.img_album_exp4, false))
+//            add(Album(5, "BBoom BBoom", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5, false))
+//            add(Album(6, "Weekend", "태연 (Tae Yeon)", R.drawable.img_album_exp6, false))
+//        }
 
         // 더미데이터랑 Adapter 연결
         val albumRVAdapter = AlbumRVAdapter(albumDatas)
-        // 리사이클러뷰에 어댑터를 연결
         binding.homeTodayMusicAlbumRv.adapter = albumRVAdapter
 
-        albumRVAdapter.setMyItemClickListener(object : AlbumRVAdapter.MyItemClickListener{
+        albumRVAdapter.setMyItemClickListener(object : AlbumRVAdapter.MyItemClickListener {
 
             override fun onItemClick(album: Album) {
                 changeAlbumFragment(album)
@@ -90,6 +95,49 @@ class HomeFragment : Fragment() {
 
         return binding.root
     }
+
+    private fun initAlbumData() {
+        lifecycleScope.launch {
+            val albumsFromDB = withContext(Dispatchers.IO) {
+                songDB.albumDao().getAlbums()
+            }
+            if (albumsFromDB.isEmpty()) {
+                // DB에 데이터가 없으면 삽입
+                withContext(Dispatchers.IO) {
+                    val albums = listOf(
+                        Album(1, "Butter", "방탄소년단 (BTS)", R.drawable.img_album_exp, false),
+                        Album(2, "Lilac", "아이유 (IU)", R.drawable.img_album_exp2, false),
+                        Album(3, "Next Level", "에스파 (AESPA)", R.drawable.img_album_exp3, false),
+                        Album(4, "Boy with Luv", "방탄소년단 (BTS)", R.drawable.img_album_exp4, false),
+                        Album(
+                            5,
+                            "BBoom BBoom",
+                            "모모랜드 (MOMOLAND)",
+                            R.drawable.img_album_exp5,
+                            false
+                        ),
+                        Album(6, "Weekend", "태연 (Tae Yeon)", R.drawable.img_album_exp6, false)
+                    )
+                    albums.forEach { album ->
+                        songDB.albumDao().insert(album)
+                    }
+                    Log.d("HomeFragment", "DB에 데이터 삽입 완료")
+                    songDB.albumDao().getAlbums()
+                }
+            } else {
+                withContext(Dispatchers.IO) {
+                    songDB.albumDao().getAlbums()
+                }
+            }.also { albums ->
+                withContext(Dispatchers.Main) {
+                    albumDatas.clear()
+                    albumDatas.addAll(albums)
+                    binding.homeTodayMusicAlbumRv.adapter?.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
 
     private fun changeAlbumFragment(album: Album) {
         (context as MainActivity).supportFragmentManager.beginTransaction()
