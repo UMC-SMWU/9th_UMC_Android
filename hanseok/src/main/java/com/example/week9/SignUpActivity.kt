@@ -1,12 +1,18 @@
-package com.example.week8
+package com.example.week9
 
 import UserRepository
+import android.R.id.message
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.week8.databinding.ActivitySignupBinding
+import com.example.week9.databinding.ActivitySignupBinding
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : AppCompatActivity(), SignUpView {
     lateinit var binding: ActivitySignupBinding
     private val userRepository = UserRepository()
 
@@ -24,8 +30,7 @@ class SignUpActivity : AppCompatActivity() {
         val name = binding.signUpNameEt.text.toString()
         val email = binding.signUpIdEt.text.toString() + "@" + binding.signUpDirectInputEt.text.toString()
         val password = binding.signUpPasswordEt.text.toString()
-
-        return User("", email, password, name)
+        return User(email, password, name)
     }
 
     private fun signUp() {
@@ -46,14 +51,23 @@ class SignUpActivity : AppCompatActivity() {
             return
         }
 
-        val user = getUser()
 
-        // UserRepository를 통해 회원가입 요청
-        userRepository.signUp(user) { isSuccess, message ->
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-            if (isSuccess) {
-                finish() // 회원가입 화면 종료
-            }
-        }
+        val authService = AuthService()
+        authService.setSignUpView(this)
+
+        authService.signUp(getUser())
     }
+
+    override fun onSignUpSuccess() {
+        binding.signUpLoadingPb.visibility = View.GONE
+        Toast.makeText(this, "회원가입에 성공했습니다.", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+    override fun onSignUpFailure(code: String, message: String) {
+        binding.signUpLoadingPb.visibility = View.GONE
+        Toast.makeText(this, "회원가입에 실패했습니다.", Toast.LENGTH_LONG).show()
+        finish()
+    }
+
 }
