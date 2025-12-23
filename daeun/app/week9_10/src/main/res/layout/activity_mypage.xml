@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/my_page_back_arrow_ib"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/outline_arrow_back_ios_24"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/my_page_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:text="마이페이지"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/not_kakao_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/my_page_tv"
+        app:layout_constraintStart_toStartOf="parent">
+        <LinearLayout
+            android:id="@+id/my_page_btn_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/my_page_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/token_test_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_gray"
+                android:text="토큰 테스트"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/change_info_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_gray"
+                android:text="정보 수정"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/logout_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/light_gray"
+                android:text="로그아웃"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/unsubscribe_btn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/red"
+                android:text="회원 탈퇴"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp" />
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/my_page_change_info_cl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/my_page_btn_ll"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+            <EditText
+                android:id="@+id/my_page_name_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:background="@null"
+                android:hint="닉네임"
+                android:inputType="text"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <EditText
+                android:id="@+id/my_page_password_et"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="20dp"
+                android:background="@null"
+                android:hint="새 비밀번호"
+                android:inputType="textPassword"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/my_page_name_et"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/my_page_confirm_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="수정"
+                android:background="@color/flo"
+                android:textColor="@color/white"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/my_page_password_et"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/kakao_ll"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/my_page_tv"
+        app:layout_constraintStart_toStartOf="parent">
+        <ImageView
+            android:id="@+id/kakao_profile_iv"
+            android:layout_width="800px"
+            android:layout_height="500px"
+            android:src="@color/flo"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/kakao_email_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/black"
+            android:textSize="24dp"
+            app:layout_constraintTop_toBottomOf="@id/kakao_profile_iv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/kakao_nickname_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/black"
+            android:textSize="24dp"
+            app:layout_constraintTop_toBottomOf="@id/kakao_email_tv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+        <View
+            android:id="@+id/kakao_view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            app:layout_constraintTop_toBottomOf="@id/kakao_nickname_tv" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/kakao_logout_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="로그아웃"
+            android:background="@color/flo"
+            android:textColor="@color/white"
+            android:layout_margin="16dp"
+            app:layout_constraintTop_toBottomOf="@id/kakao_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
